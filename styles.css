@@ -1,0 +1,13 @@
+html {
+  box-sizing: border-box;
+}
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font-family: system-ui, Arial, sans-serif;
+  background-color: inherit;
+}
