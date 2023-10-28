@@ -48,7 +48,8 @@ h1 {
   place-content: center;
   cursor: pointer;
 }
-.game-board > .winner {
+.game-board > .winner,
+.game-board > .menu {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -56,7 +57,22 @@ h1 {
   place-content: center;
   font-size: xx-large;
   color: white;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: darkcyan;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 30px;
+}
+.menu > button,
+.winner > button {
+  background-color: wheat;
+  padding: 20px 50px;
+  border-radius: 30px;
+  text-transform: uppercase;
+  font-size: large;
+  cursor: pointer;
 }
 .buttons {
   width: min(90dvw, 500px);
