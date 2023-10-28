@@ -66,14 +66,14 @@ scoreArray.forEach((score, index) => {
         case "X":
           button.textContent = "X";
           currentTurn = "O";
-          document.querySelector(".x").classList.toggle("red");
-          document.querySelector(".o").classList.toggle("blue");
+          document.querySelector(".x").classList.toggle("active");
+          document.querySelector(".o").classList.toggle("active");
           break;
         case "O":
           button.textContent = "O";
           currentTurn = "X";
-          document.querySelector(".x").classList.toggle("red");
-          document.querySelector(".o").classList.toggle("blue");
+          document.querySelector(".x").classList.toggle("active");
+          document.querySelector(".o").classList.toggle("active");
           break;
       }
       scoreArray[index] = button.textContent;

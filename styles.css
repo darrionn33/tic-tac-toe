@@ -13,8 +13,19 @@ html {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
+body {
+  padding: 10px;
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+h1 {
+  text-align: center;
+}
 .game-board {
-  width: min(100dvw, 500px);
+  width: min(90dvw, 500px);
   aspect-ratio: 1;
   display: grid;
   background-color: wheat;
@@ -29,8 +40,8 @@ html {
 .game-board > button {
   color: white;
   font-size: min(3rem, 80px);
-  width: min(30dvw, 450px / 3);
-  height: min(30dvw, 450px / 3);
+  width: min(25dvw, 450px / 3);
+  height: min(25dvw, 450px / 3);
   background-color: darkcyan;
   text-align: center;
   display: grid;
@@ -48,21 +59,27 @@ html {
   background-color: rgba(0, 0, 0, 0.5);
 }
 .buttons {
-  width: min(100dvw, 500px);
-  height: 200px;
-  padding: 50px 0px;
+  width: min(90dvw, 500px);
   gap: 50px;
   display: flex;
 }
 .buttons > button {
   font-size: xx-large;
-  background-color: lightgrey;
-  color: gray;
+  outline: 1px solid;
   flex: 1;
+  padding: 15px;
 }
-.red {
-  color: red !important;
+.active {
+  background-color: darkcyan;
+  color: wheat;
 }
-.blue {
-  color: blue !important;
+footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(102, 35, 102, 0.76);
+  color: white;
 }
