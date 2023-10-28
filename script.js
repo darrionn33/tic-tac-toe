@@ -20,11 +20,9 @@ const endGame = (winner, scoreArray) => {
   winnerDiv.appendChild(restartButton);
   gameBoard.appendChild(winnerDiv);
   restartButton.onclick = () => {
-    console.log("reset");
     gameBoard.removeChild(winnerDiv);
   };
   currentMove = 0;
-  console.log("currentMove:", currentMove);
 };
 const checkWin = (scoreArray, currentMove, reset) => {
   const winConditionsArray = [
@@ -71,7 +69,6 @@ const startGame = (players) => {
   let currentMove = 0;
   const resetCurrentMove = () => {
     currentMove = 0;
-    console.log(currentMove);
   };
   switch (players) {
     case 1:
@@ -101,7 +98,6 @@ const startGame = (players) => {
             }
             scoreArray[index] = button.textContent;
             currentMove = currentMove + 1;
-            console.log("currentMove:", currentMove);
             checkWin(scoreArray, currentMove, resetCurrentMove);
           }
         };
