@@ -1,15 +1,28 @@
 const gameBoard = document.querySelector(".game-board");
 const scoreArray = ["", "", "", "", "", "", "", "", ""];
+let currentTurn = "X";
+let currentMove = 0;
 
 const endGame = (winner) => {
   scoreArray.forEach((item, index) => {
     scoreArray[index] = "";
-    console.log(winner + " wins!");
   });
-  const buttons = document.querySelectorAll("button");
+  const buttons = document.querySelectorAll(".game-board > button");
   buttons.forEach((button) => {
     button.textContent = "";
   });
+  const winnerDiv = document.createElement("div");
+  if (winner === "Draw") {
+    winnerDiv.textContent = winner + "!";
+  } else {
+    winnerDiv.textContent = winner + " won!";
+  }
+  winnerDiv.classList.add("winner");
+  gameBoard.appendChild(winnerDiv);
+  setTimeout(() => {
+    gameBoard.removeChild(winnerDiv);
+  }, 1000);
+  currentMove = 0;
 };
 const checkWin = () => {
   const winConditionsArray = [
@@ -35,8 +48,8 @@ const checkWin = () => {
       scoreArray[winCondition[2]] === "O"
     ) {
       endGame("O");
-    } else {
-      // console.log("Draw!");
+    } else if (currentMove === 9) {
+      endGame("Draw");
     }
   });
 };
@@ -48,8 +61,24 @@ scoreArray.forEach((score, index) => {
   gameBoard.appendChild(button);
 
   button.onclick = () => {
-    button.textContent = button.textContent === "X" ? "O" : "X";
-    scoreArray[index] = button.textContent;
-    checkWin();
+    if (scoreArray[index] === "") {
+      switch (currentTurn) {
+        case "X":
+          button.textContent = "X";
+          currentTurn = "O";
+          document.querySelector(".x").classList.toggle("red");
+          document.querySelector(".o").classList.toggle("blue");
+          break;
+        case "O":
+          button.textContent = "O";
+          currentTurn = "X";
+          document.querySelector(".x").classList.toggle("red");
+          document.querySelector(".o").classList.toggle("blue");
+          break;
+      }
+      scoreArray[index] = button.textContent;
+      currentMove = currentMove + 1;
+      checkWin();
+    }
   };
 });
