@@ -1,5 +1,26 @@
 const gameBoard = document.querySelector(".game-board");
 
+const renderButtons = (active = "X") => {
+  const xButton = document.createElement("button");
+  const oButton = document.createElement("button");
+  xButton.textContent = "X";
+  oButton.textContent = "O";
+
+  switch (active) {
+    case "X":
+      xButton.classList.add("active");
+      oButton.classList.remove("active");
+      break;
+    case "O":
+      oButton.classList.add("active");
+      xButton.classList.remove("active");
+      break;
+  }
+  document.querySelector(".buttons").replaceChildren();
+  document.querySelector(".buttons").appendChild(xButton);
+  document.querySelector(".buttons").appendChild(oButton);
+};
+renderButtons();
 const endGame = (winner, scoreArray) => {
   scoreArray.forEach((item, index) => {
     scoreArray[index] = "";
@@ -24,7 +45,7 @@ const endGame = (winner, scoreArray) => {
   };
   currentMove = 0;
 };
-const checkWin = (scoreArray, currentMove, reset) => {
+const checkWin = (scoreArray, currentMove, reset, currentTurnSetter) => {
   const winConditionsArray = [
     [0, 1, 2],
     [3, 4, 5],
@@ -42,17 +63,23 @@ const checkWin = (scoreArray, currentMove, reset) => {
       scoreArray[winCondition[2]] === "X"
     ) {
       reset();
+      currentTurnSetter();
       endGame("X", scoreArray);
+      renderButtons("X");
     } else if (
       scoreArray[winCondition[0]] === "O" &&
       scoreArray[winCondition[1]] === "O" &&
       scoreArray[winCondition[2]] === "O"
     ) {
       reset();
+      currentTurnSetter("O");
+      renderButtons("O");
       endGame("O", scoreArray);
     } else if (currentMove === 9) {
       reset();
       endGame("Draw", scoreArray);
+      currentTurnSetter();
+      renderButtons();
     }
     if (currentMove === 9) {
       return false;
@@ -67,6 +94,9 @@ const startGame = (players) => {
   const scoreArray = ["", "", "", "", "", "", "", "", ""];
   let currentTurn = "X";
   let currentMove = 0;
+  const currentTurnSetter = (turn = "X") => {
+    currentTurn = turn;
+  };
   const resetCurrentMove = () => {
     currentMove = 0;
   };
@@ -86,19 +116,22 @@ const startGame = (players) => {
               case "X":
                 button.textContent = "X";
                 currentTurn = "O";
-                document.querySelector(".x").classList.toggle("active");
-                document.querySelector(".o").classList.toggle("active");
+                renderButtons("O");
                 break;
               case "O":
                 button.textContent = "O";
                 currentTurn = "X";
-                document.querySelector(".x").classList.toggle("active");
-                document.querySelector(".o").classList.toggle("active");
+                renderButtons();
                 break;
             }
             scoreArray[index] = button.textContent;
             currentMove = currentMove + 1;
-            checkWin(scoreArray, currentMove, resetCurrentMove);
+            checkWin(
+              scoreArray,
+              currentMove,
+              resetCurrentMove,
+              currentTurnSetter
+            );
           }
         };
       });
