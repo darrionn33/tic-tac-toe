@@ -1,51 +1,76 @@
 const gameBoard = document.querySelector(".game-board");
 
-const renderButtons = (active = "X") => {
-  const xButton = document.createElement("button");
-  const oButton = document.createElement("button");
-  xButton.textContent = "X";
-  oButton.textContent = "O";
+let computer = false;
+let playing = false;
 
-  switch (active) {
-    case "X":
-      xButton.classList.add("active");
-      oButton.classList.remove("active");
-      break;
-    case "O":
-      oButton.classList.add("active");
-      xButton.classList.remove("active");
-      break;
-  }
-  document.querySelector(".buttons").replaceChildren();
-  document.querySelector(".buttons").appendChild(xButton);
-  document.querySelector(".buttons").appendChild(oButton);
+const start1 = document.querySelector("#p1");
+const start2 = document.querySelector("#p2");
+
+start1.onclick = () => {
+  computer = true;
+  startGame();
 };
-renderButtons();
-const endGame = (winner, scoreArray) => {
-  scoreArray.forEach((item, index) => {
-    scoreArray[index] = "";
-  });
-  const buttons = document.querySelectorAll(".game-board > button");
-  buttons.forEach((button) => {
-    button.textContent = "";
-  });
-  const winnerDiv = document.createElement("div");
-  if (winner === "Draw") {
-    winnerDiv.textContent = winner + "!";
-  } else {
-    winnerDiv.textContent = winner + " won!";
-  }
-  const restartButton = document.createElement("button");
-  restartButton.textContent = "RESTART";
-  winnerDiv.classList.add("winner");
-  winnerDiv.appendChild(restartButton);
-  gameBoard.appendChild(winnerDiv);
-  restartButton.onclick = () => {
-    gameBoard.removeChild(winnerDiv);
-  };
-  currentMove = 0;
+start2.onclick = () => {
+  startGame();
 };
-const checkWin = (scoreArray, currentMove, reset, currentTurnSetter) => {
+
+let ended = false;
+let moves = 0;
+let turn = true;
+let scoreArray = ["", "", "", "", "", "", "", "", ""];
+
+const startGame = () => {
+  ended = false;
+  gameBoard.replaceChildren();
+
+  for (let i = 0; i < 9; i++) {
+    const button = document.createElement("button");
+    gameBoard.appendChild(button);
+
+    button.onclick = () => {
+      if (scoreArray[i] === "" && !playing) {
+        button.classList.add("fade-in");
+        setTimeout(() => {
+          button.classList.remove("fade-in");
+          checkWin();
+        }, 700);
+        button.textContent = turn ? "X" : "O";
+        scoreArray[i] = turn ? "X" : "O";
+        moves++;
+        turn = !turn;
+
+        if (computer && !ended) {
+          const randomMove = () => Math.floor(Math.random() * 9) + 1;
+
+          let computerMove;
+          playing = true;
+
+          do {
+            computerMove = randomMove();
+          } while (scoreArray[computerMove] !== "");
+          setTimeout(() => {
+            document.querySelectorAll("button")[computerMove].textContent = "O";
+            document
+              .querySelectorAll("button")
+              [computerMove].classList.add("fade-in");
+            scoreArray[computerMove] = "O";
+            moves++;
+            turn = !turn;
+            setTimeout(() => {
+              document
+                .querySelectorAll("button")
+                [computerMove].classList.remove("fade-in");
+              playing = false;
+              checkWin();
+            }, 200);
+          }, 700);
+        }
+      }
+    };
+  }
+};
+
+const checkWin = () => {
   const winConditionsArray = [
     [0, 1, 2],
     [3, 4, 5],
@@ -56,105 +81,44 @@ const checkWin = (scoreArray, currentMove, reset, currentTurnSetter) => {
     [1, 4, 7],
     [2, 5, 8],
   ];
-  winConditionsArray.every((winCondition) => {
-    if (
-      scoreArray[winCondition[0]] === "X" &&
-      scoreArray[winCondition[1]] === "X" &&
-      scoreArray[winCondition[2]] === "X"
-    ) {
-      reset();
-      currentTurnSetter();
-      endGame("X", scoreArray);
-      renderButtons("X");
-    } else if (
-      scoreArray[winCondition[0]] === "O" &&
-      scoreArray[winCondition[1]] === "O" &&
-      scoreArray[winCondition[2]] === "O"
-    ) {
-      reset();
-      currentTurnSetter("O");
-      renderButtons("O");
-      endGame("O", scoreArray);
-    } else if (currentMove === 9) {
-      reset();
-      endGame("Draw", scoreArray);
-      currentTurnSetter();
-      renderButtons();
-    }
-    if (currentMove === 9) {
-      return false;
-    } else {
-      return true;
-    }
-  });
-};
 
-const startGame = (players) => {
-  gameBoard.removeChild(document.querySelector(".menu"));
-  const scoreArray = ["", "", "", "", "", "", "", "", ""];
-  let currentTurn = "X";
-  let currentMove = 0;
-  const currentTurnSetter = (turn = "X") => {
-    currentTurn = turn;
-  };
-  const resetCurrentMove = () => {
-    currentMove = 0;
-  };
-  switch (players) {
-    case 1:
-      break;
-    case 2:
-      scoreArray.forEach((score, index) => {
-        const button = document.createElement("button");
-        button.textContent = score;
-        button.setAttribute("data-index", index);
-        gameBoard.appendChild(button);
+  const endGame = (winner = "draw") => {
+    ended = true;
+    turn = true;
+    scoreArray = scoreArray.map(() => "");
+    gameBoard.replaceChildren();
 
-        button.onclick = () => {
-          if (scoreArray[index] === "") {
-            switch (currentTurn) {
-              case "X":
-                button.textContent = "X";
-                currentTurn = "O";
-                renderButtons("O");
-                break;
-              case "O":
-                button.textContent = "O";
-                currentTurn = "X";
-                renderButtons();
-                break;
-            }
-            scoreArray[index] = button.textContent;
-            currentMove = currentMove + 1;
-            checkWin(
-              scoreArray,
-              currentMove,
-              resetCurrentMove,
-              currentTurnSetter
-            );
-          }
-        };
-      });
-      break;
+    const winnerDiv = document.createElement("div");
+    winnerDiv.textContent = winner !== "draw" ? winner + " won!" : "Draw!";
+
+    const restartButton = document.createElement("button");
+    restartButton.textContent = "RESTART";
+    winnerDiv.classList.add("winner");
+    winnerDiv.appendChild(restartButton);
+    gameBoard.appendChild(winnerDiv);
+    restartButton.onclick = () => {
+      startGame();
+    };
+    moves = 0;
+  };
+
+  if (moves === 9) {
+    endGame();
+  } else {
+    winConditionsArray.forEach((winCondition) => {
+      if (
+        scoreArray[winCondition[0]] === "X" &&
+        scoreArray[winCondition[1]] === "X" &&
+        scoreArray[winCondition[2]] === "X"
+      ) {
+        endGame("X");
+      } else if (
+        scoreArray[winCondition[0]] === "O" &&
+        scoreArray[winCondition[1]] === "O" &&
+        scoreArray[winCondition[2]] === "O"
+      ) {
+        endGame("O");
+      }
+    });
   }
-};
-
-document.querySelector("#start-button").onclick = () => {
-  document.querySelector(".menu").replaceChildren();
-  const btn1 = document.createElement("button");
-  btn1.id = "1P";
-  btn1.textContent = "1 Player";
-  btn1.setAttribute("disabled", "true");
-  const btn2 = document.createElement("button");
-  btn2.id = "2P";
-  btn2.textContent = "2 Players";
-  document.querySelector(".menu").appendChild(btn1);
-  document.querySelector(".menu").appendChild(btn2);
-
-  btn1.onclick = () => {
-    startGame(1);
-  };
-  btn2.onclick = () => {
-    startGame(2);
-  };
 };

@@ -1,8 +1,5 @@
 # Tic Tac Toe!
 
-A simple game of tic-tac-toe made with JS.
+![](./ss.png)
 
-## TO DO
-
-1. Add a computer opponent.
-2. Refactor the code.
+A simple game of tic-tac-toe made with JS. Computer is very easy tho xd.

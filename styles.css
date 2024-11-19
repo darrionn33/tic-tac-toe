@@ -74,17 +74,6 @@ h1 {
   font-size: large;
   cursor: pointer;
 }
-.buttons {
-  width: min(90dvw, 500px);
-  gap: 50px;
-  display: flex;
-}
-.buttons > button {
-  font-size: xx-large;
-  outline: 1px solid;
-  flex: 1;
-  padding: 15px;
-}
 .active {
   background-color: darkcyan;
   color: wheat;
@@ -98,4 +87,18 @@ footer {
   padding: 10px;
   background-color: rgba(102, 35, 102, 0.76);
   color: white;
+}
+.fade-in {
+  animation: fade-in 0.5s forwards;
+}
+@keyframes fade-in {
+  from {
+    color: darkcyan;
+  }
+  20% {
+    color: darkcyan;
+  }
+  to {
+    color: white;
+  }
 }
